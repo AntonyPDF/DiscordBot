@@ -1,19 +1,12 @@
 import discord
-import os
-import asyncio
-import discord.voice_client
-import functools
 import discord.ext
-import itertools
-import async_timeout
 import math
 import random
 import youtube_dl
-from async_timeout import timeout
 from discord.ext import commands, tasks
-from discord.voice_client import VoiceClient
 from random import choice
 from random import randrange
+
 
 def Prime(n):
     if n == 1:
