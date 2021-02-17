@@ -2,7 +2,6 @@ import discord
 import discord.ext
 import math
 import random
-import youtube_dl
 from discord.ext import commands, tasks
 from random import choice
 from random import randrange
