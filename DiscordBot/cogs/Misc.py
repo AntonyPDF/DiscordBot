@@ -34,10 +34,6 @@ class Misc(commands.Cog):
     @commands.group(name='rng', help='Generates a random number in a given limit')
     async def rng(self, ctx, a:int):
         await ctx.send(randrange(a))
-    
-    @commands.group(name='gay', help='Gay')
-    async def gay(self, ctx):
-        await ctx.send('{} is gay'.format(ctx.message.author))
 
     @commands.group(name='dream', help='Shows chads dream')
     async def dream(self, ctx):
