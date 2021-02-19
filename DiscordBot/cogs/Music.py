@@ -356,6 +356,22 @@ class Music(commands.Cog):
             return await ctx.send('Empty queue.')
 
         ctx.voice_state.songs.remove(index - 1)
+        
+    @commands.command(name='pause')
+    @commands.has_permissions(manage_guild=True)
+    async def _pause(self, ctx: commands.Context):
+        """Pauses the currently playing song"""
+
+        if ctx.voice_state.voice.is_playing():
+            ctx.voice_state.voice.pause()
+
+    @commands.command(name='resume')
+    @commands.has_permissions(manage_guild=True)
+    async def _resume(self, ctx: commands.Context):
+        """Resumes the currently paused song"""
+
+        if ctx.voice_state.voice.is_paused():
+            ctx.voice_state.voice.resume()
 
     @commands.command(name='play')
     async def _play(self, ctx: commands.Context, *, search: str):
