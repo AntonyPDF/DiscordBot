@@ -151,9 +151,6 @@ class SongQueue(asyncio.Queue):
         else:
             return self._queue[item]
 
-    def __iter__(self):
-        return self._queue.__iter__() 
-
     def __len__(self):
         return self.qsize()
 
@@ -213,7 +210,7 @@ class VoiceState:
             if not self.loop:
 
                 try:
-                    async with timeout(300):
+                    async with timeout(999999):
                         self.current = await self.songs.get()
                 except asyncio.TimeoutError:
                     self.bot.loop.create_task(self.stop())
@@ -302,7 +299,7 @@ class Music(commands.Cog):
 
         await ctx.send(embed=ctx.voice_state.current.create_embed())
 
-    @commands.command(name='skip')
+    @commands.command(name='skip', aliases=['s'])
     async def _skip(self, ctx: commands.Context):
         """Skips a song
         """
@@ -320,11 +317,6 @@ class Music(commands.Cog):
 
             if total_votes == 1:
                 ctx.voice_state.skip()
-            else:
-                await ctx.send('Skip vote added, currently at **{}/1**'.format(total_votes))
-
-        else:
-            await ctx.send('You have already voted to skip this song')
 
     @commands.command(name='queue')
     async def _queue(self, ctx: commands.Context, *, page: int = 1):
@@ -356,7 +348,7 @@ class Music(commands.Cog):
             return await ctx.send('Empty queue.')
 
         ctx.voice_state.songs.remove(index - 1)
-        
+
     @commands.command(name='pause')
     @commands.has_permissions(manage_guild=True)
     async def _pause(self, ctx: commands.Context):
@@ -372,8 +364,17 @@ class Music(commands.Cog):
 
         if ctx.voice_state.voice.is_paused():
             ctx.voice_state.voice.resume()
+    
+    @commands.command(name='shuffle')
+    async def _shuffle(self, ctx: commands.Context):
+        """Shuffles the queue."""
 
-    @commands.command(name='play')
+        if len(ctx.voice_state.songs) == 0:
+            return await ctx.send('Empty queue.')
+
+        ctx.voice_state.songs.shuffle()
+
+    @commands.command(name='play', aliases=['p'])
     async def _play(self, ctx: commands.Context, *, search: str):
         """Plays a song
         """
@@ -391,6 +392,136 @@ class Music(commands.Cog):
 
                 await ctx.voice_state.songs.put(song)
                 await ctx.send('Enqueued {}'.format(str(source)))
+    
+    @commands.command(name='quem', help = 'Quem?')
+    async def quem(self, ctx):
+        await ctx.invoke(self._play, search = 'https://www.youtube.com/watch?v=AW0MbBFN-yk&ab_channel=Leagueofp%C3%A9rolas')
+        await ctx.invoke(self.bot.get_command('clear'), a = 1)
+
+    @commands.command(name='surpresa', help = 'Surpresa')
+    async def surpresa(self, ctx):
+        await ctx.invoke(self._play, search = 'https://www.youtube.com/watch?v=xhmfM5v4aKo&ab_channel=MarcusPrates')
+        await ctx.invoke(self.bot.get_command('clear'), a = 1)
+
+    @commands.command(name='escondido', help = 'Escondido')
+    async def escondido(self, ctx):
+        await ctx.invoke(self._play, search = 'https://www.youtube.com/watch?v=VEZGNIXIMMk&ab_channel=MarcusPrates')
+        await ctx.invoke(self.bot.get_command('clear'), a = 1)
+
+    @commands.command(name='barril', help = 'Barril')
+    async def barril(self, ctx):
+        await ctx.invoke(self._play, search = 'https://www.youtube.com/watch?v=pA2Qp2cXG1E&ab_channel=Dig%C3%A3oTKS')
+        await ctx.invoke(self.bot.get_command('clear'), a = 1)    
+
+    @commands.command(name='sucumba', help = 'Sucumba')
+    async def sucumba(self, ctx):
+        await ctx.invoke(self._play, search = 'https://www.youtube.com/watch?v=YDRuSlMUTqM')
+        await ctx.invoke(self.bot.get_command('clear'), a = 1)
+
+    @commands.command(name='pode', help = 'Pode')
+    async def pode(self, ctx):
+        await ctx.invoke(self._play, search = 'https://youtu.be/02SSY_M_Pl4')
+        await ctx.invoke(self.bot.get_command('clear'), a = 1)
+
+    @commands.command(name='ira', help = 'ira')
+    async def ira(self, ctx):
+        await ctx.invoke(self._play, search = 'https://www.youtube.com/watch?v=5u-FyLGhReI')
+        await ctx.invoke(self.bot.get_command('clear'), a = 1)             
+
+    @commands.command(name='muda', help = 'Muda Muda Muda')
+    async def muda(self, ctx):
+        await ctx.invoke(self._play, search = 'https://youtu.be/cu789yY20wo')
+        await ctx.invoke(self.bot.get_command('clear'), a = 1)
+
+    @commands.command(name='imagine', help = 'Imagine')
+    async def imagine(self, ctx):
+        await ctx.invoke(self._play, search = 'https://www.youtube.com/watch?v=Jbp0aIilDMo')
+        await ctx.invoke(self.bot.get_command('clear'), a = 1)
+
+    @commands.command(name='ok', help = 'Ok')
+    async def ok(self, ctx):
+        await ctx.invoke(self._play, search = 'https://www.youtube.com/watch?v=T9NjXekZ8kA')
+        await ctx.invoke(self.bot.get_command('clear'), a = 1)
+
+    @commands.command(name='duro', help = 'Duro')
+    async def duro(self, ctx):
+        await ctx.invoke(self._play, search = 'https://www.youtube.com/watch?v=o4QccAVasuE')
+        await ctx.invoke(self.bot.get_command('clear'), a = 1)
+
+    @commands.command(name='ionia', help = 'Ionia')
+    async def ionia(self, ctx):
+        await ctx.invoke(self._play, search = 'https://www.youtube.com/watch?v=nUfk-ehFp6E')
+        await ctx.invoke(self.bot.get_command('clear'), a = 1)
+
+    @commands.command(name='ryu', help = 'Ryu')
+    async def ryu(self, ctx):
+        await ctx.invoke(self._play, search = 'https://www.youtube.com/watch?v=rVG9LOOmaTo&ab_channel=CopopaxiTV')
+        await ctx.invoke(self.bot.get_command('clear'), a = 1)
+
+    @commands.command(name='ken', help = 'Ken')
+    async def ken(self, ctx):
+        await ctx.invoke(self._play, search = 'https://www.youtube.com/watch?v=gqO2RXdylNY&ab_channel=BlobSound')
+        await ctx.invoke(self.bot.get_command('clear'), a = 1)
+
+    @commands.command(name='yasuo', help = 'Yasuo')
+    async def yasuo(self, ctx):
+        await ctx.invoke(self._play, search = 'https://www.youtube.com/watch?v=E5GVC1Db9Lg')
+        await ctx.invoke(self.bot.get_command('clear'), a = 1)
+
+    @commands.command(name='sasuke', help = 'Sasuke')
+    async def sasuke(self, ctx):
+        await ctx.invoke(self._play, search = 'https://www.youtube.com/watch?v=yN9_OvXO-Bw&ab_channel=Shourya')
+        await ctx.invoke(self.bot.get_command('clear'), a = 1)
+
+    @commands.command(name='tubarao', help = 'Tubarao')
+    async def tubarao(self, ctx):
+        await ctx.invoke(self._play, search = 'https://www.youtube.com/watch?v=cyZDDq1DJ4o&ab_channel=AnimeCytriko')
+        await ctx.invoke(self.bot.get_command('clear'), a = 1)
+
+    @commands.command(name='naruto', help = 'Naruto')
+    async def naruto(self, ctx):
+        await ctx.invoke(self._play, search = 'https://www.youtube.com/watch?v=aLrcanxzDFw&ab_channel=AlenjadroFrenando')
+        await ctx.invoke(self.bot.get_command('clear'), a = 1)
+
+    @commands.command(name='lambi', help = 'Lambi')
+    async def lambi(self, ctx):
+        await ctx.invoke(self._play, search = 'https://www.youtube.com/watch?v=O3izwnI5bjg')
+        await ctx.invoke(self.bot.get_command('clear'), a = 1)
+
+    @commands.command(name='rx', help = 'Rx')
+    async def rx(self, ctx):
+        await ctx.invoke(self._play, search = 'https://www.youtube.com/watch?v=1Fc4ioZSsjw&ab_channel=Dig%C3%A3oTKS')
+        await ctx.invoke(self.bot.get_command('clear'), a = 1)
+
+    @commands.command(name='museu', help = 'Museu')
+    async def museu(self, ctx):
+        await ctx.invoke(self._play, search = 'https://www.youtube.com/watch?v=I3WroNY1U0U')
+        await ctx.invoke(self.bot.get_command('clear'), a = 1)
+
+    @commands.command(name='lamina', help = 'Lâmina')
+    async def lamina(self, ctx):
+        await ctx.invoke(self._play, search = 'https://www.youtube.com/watch?v=cXf1dSeLwC4&ab_channel=BrazucaofLegends')
+        await ctx.invoke(self.bot.get_command('clear'), a = 1)
+
+    @commands.command(name='maestria', help = 'Maestria')
+    async def maestria(self, ctx):
+        await ctx.invoke(self._play, search = 'https://www.youtube.com/watch?v=-rw4qrl3zOM&ab_channel=BigBoii')
+        await ctx.invoke(self.bot.get_command('clear'), a = 1)
+
+    @commands.command(name='ping', help = 'Ping')
+    async def ping(self, ctx):
+        await ctx.invoke(self._play, search = 'https://www.youtube.com/watch?v=T6dvKYZ7enU&ab_channel=TimTam')
+        await ctx.invoke(self.bot.get_command('clear'), a = 1)
+
+    @commands.command(name='bruh', help = 'Bruh')
+    async def bruh(self, ctx):
+        await ctx.invoke(self._play, search = 'https://www.youtube.com/watch?v=2ZIpFytCSVc&ab_channel=JameBenedict')
+        await ctx.invoke(self.bot.get_command('clear'), a = 1)
+
+    @commands.command(name='mamada', help = 'mamada')
+    async def mamada(self, ctx):
+        await ctx.invoke(self._play, search = 'https://www.youtube.com/watch?v=i0X2oEn6QM8')
+        await ctx.invoke(self.bot.get_command('clear'), a = 1)                                                        
 
     @_join.before_invoke
     @_play.before_invoke
