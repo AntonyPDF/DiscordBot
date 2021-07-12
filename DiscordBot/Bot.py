@@ -26,7 +26,7 @@ client = discord.Client()
 
 help_command = commands.DefaultHelpCommand(no_category = 'Others')
 
-client = commands.Bot(command_prefix = '!', help_command = help_command)
+client = commands.Bot(command_prefix = '*', help_command = help_command)
 
 client.load_extension('cogs.Math')
 client.load_extension('cogs.Music')
