@@ -125,6 +125,24 @@ class YTDLSource(discord.PCMVolumeTransformer):
 
         return ', '.join(duration)
 
+class SongQueue(asyncio.Queue):
+    def __getitem__(self, item):
+        if isinstance(item, slice):
+            return list(itertools.islice(self._queue, item.start, item.stop, item.step))
+        else:
+            return self._queue[item]
+
+    def __len__(self):
+        return self.qsize()
+
+    def clear(self):
+        self._queue.clear()
+
+    def shuffle(self):
+        random.shuffle(self._queue)
+
+    def remove(self, index: int):
+        del self._queue[index]
 
 class Song:
     __slots__ = ('source', 'requester')
@@ -175,7 +193,7 @@ class VoiceState:
         self.songs = SongQueue()
 
         self._loop = False
-        self._volume = 0.15
+        self._volume = 1.0
         self.skip_votes = set()
 
         self.audio_player = bot.loop.create_task(self.audio_player_task())
@@ -299,7 +317,7 @@ class Music(commands.Cog):
 
         await ctx.send(embed=ctx.voice_state.current.create_embed())
 
-    @commands.command(name='skip', aliases=['s'])
+    @commands.command(name='skip', aliases=['s','S'])
     async def _skip(self, ctx: commands.Context):
         """Skips a song
         """
@@ -370,11 +388,13 @@ class Music(commands.Cog):
         """Shuffles the queue."""
 
         if len(ctx.voice_state.songs) == 0:
-            return await ctx.send('Empty queue.')
+            return await ctx.send('Empty queue')
+        else:
+            return await ctx.send('Queue shuffled')
 
         ctx.voice_state.songs.shuffle()
 
-    @commands.command(name='play', aliases=['p'])
+    @commands.command(name='play', aliases=['p', 'P'])
     async def _play(self, ctx: commands.Context, *, search: str):
         """Plays a song
         """
@@ -392,7 +412,11 @@ class Music(commands.Cog):
 
                 await ctx.voice_state.songs.put(song)
                 await ctx.send('Enqueued {}'.format(str(source)))
-               
+
+    @commands.command(name='chopin')
+    async def playtest(self, ctx):
+        await ctx.invoke(self.bot.get_command('play'), search='https://www.youtube.com/watch?v=Jn09UdSb3aA&ab_channel=HALIDONMUSIC')
+
     @_join.before_invoke
     @_play.before_invoke
     async def ensure_voice_state(self, ctx: commands.Context):
